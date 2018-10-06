@@ -1,0 +1,15 @@
+    type Query {
+        user: [Users!]!
+        post: [Posts!]!
+    }
+
+    type Users {
+        name: String!
+        lastname: String!
+        age: Int!
+    }
+
+    type Posts {
+        title: String!
+        contain: String!
+    }
