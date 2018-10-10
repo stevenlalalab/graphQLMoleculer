@@ -6,7 +6,8 @@
   "dependencies": {
     "graphql-yoga": "^1.16.2",
     "moleculer": "^0.13.3",
-    "moleculer-web": "^0.8.2"
+    "moleculer-web": "^0.8.2",
+    "nats": "^1.0.1"
   },
   "devDependencies": {},
   "scripts": {

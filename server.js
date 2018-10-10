@@ -1,4 +1,14 @@
 const { GraphQLServer } = require('graphql-yoga')
+const { ServiceBroker } = require('moleculer')
+
+const broker = new ServiceBroker ({
+    transporter: {
+        type: 'NATS',
+        options: {
+            url: 'nats://localhost:4222'
+        }
+    }
+})
 
 const posts = [{
     title: 'Chiffrage autoroute connecté',
@@ -11,10 +21,17 @@ const posts = [{
     contain: 'Dernier article'
 }]
 
+
 const resolvers = {
     Query: {
-        user: () => users,
-        post: () => posts, // point virgule ?
+        user: async () => {
+            const result = await broker.call('user.getName')
+            .catch((err) => {
+                console.log(err)
+            })
+            return result //work only with object tab
+        },
+        post: () => posts
     },
     Users: {
         name: (root) => root.name, // root ?
@@ -31,6 +48,12 @@ const server = new GraphQLServer({
     typeDefs: './src/schema.graphql',
     resolvers,
 })
+
+const startBroker = async () => {
+    await broker.start()
+}
+
+startBroker()
 
 server.start(() => {
     console.log('Server is running on http://localhost:4000')
