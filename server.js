@@ -10,31 +10,25 @@ const broker = new ServiceBroker ({
     }
 })
 
-const posts = [{
-    title: 'Chiffrage autoroute connecté',
-    contain: 'Cette exercice est complètement pourris'
-}, {
-    title: 'La Galanterie c\'est du sexisme bienveillant',
-    contain: 'Les féministes n\'aimeront pas cet article'
-}, {
-    title: 'Devinez qui est prêt en cas de désistement de Tom ?',
-    contain: 'Dernier article'
-}]
-
-
 const resolvers = {
     Query: {
         user: async () => {
-            const result = await broker.call('user.getName')
+            const result = await broker.call('user.getUser')
             .catch((err) => {
                 console.log(err)
             })
-            return result //work only with object tab
+            return result
         },
-        post: () => posts
+        post: async () =>  {
+            const result = await broker.call('user.getPost')
+            .catch((err) => {
+                console.log(err)
+            })
+            return result
+        }
     },
-    Users: {
-        name: (root) => root.name, // root ?
+        Users: {
+        name: (root) => root.name,
         lastname: (root) => root.lastname,
         age: (root) => root.age,
     },
@@ -52,8 +46,8 @@ const server = new GraphQLServer({
 const startBroker = async () => {
     await broker.start()
 }
-
 startBroker()
+
 
 server.start(() => {
     console.log('Server is running on http://localhost:4000')
